@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import Home from "./componets/Home";
+import Product from "./componets/Products";
+import Login from "./componets/Login";
+import Header from "./componets/Header";
+import Nav from "./componets/Nav";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Component } from "react";
+import axios from "axios";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      products: [],
+    };
+    axios.get("https://dummyjson.com/products").then((resp) => {
+      const products_list = resp.data.products.reverse();
+      this.setState({ products: products_list });
+    });
+  }
+  render() {
+    return (
+      <div className="App">
+        <BrowserRouter>
+          <Header />
+          <Nav />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/product" element={<Product products={this.state.products} />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
+    );
+  }
 }
 
 export default App;
